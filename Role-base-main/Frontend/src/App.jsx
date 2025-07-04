@@ -21,34 +21,36 @@ import ResetPassword from "./components/ResetPassword";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <ToastContainer position="top-center" autoClose={3000} />
-      <Routes>
-        {/* Auth Routes */}
-        <Route path="/" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+    <div className="font-primary">
+      <BrowserRouter>
+        <ToastContainer position="top-center" autoClose={3000} />
+        <Routes>
+          {/* Auth Routes */}
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
 
-        {/* Super Admin Routes */}
-        <Route path="/super-admin" element={<SuperAdminDashboard />} />
-        <Route path="/super-admin/total-clients" element={<TotalClients />} />
-        <Route path="/super-admin/total-users" element={<TotalUsers />} />
-        <Route path="/super-admin/create-client" element={<CreateClient />} />
-        <Route path="/super-admin/specific-client/:id" element={<SpecificClient />} />
+          {/* Super Admin Routes */}
+          <Route path="/super-admin" element={<SuperAdminDashboard />} />
+          <Route path="/super-admin/total-clients" element={<TotalClients />} />
+          <Route path="/super-admin/total-users" element={<TotalUsers />} />
+          <Route path="/super-admin/create-client" element={<CreateClient />} />
+          <Route path="/super-admin/specific-client/:id" element={<SpecificClient />} />
 
-        {/* Client Routes */}
-        <Route path="/client" element={<ClientDashboard />} />
-        <Route path="/client/users" element={<ClientUsers />} />
-        <Route path="/client/create-users" element={<CreateUser />} />
+          {/* Client Routes */}
+          <Route path="/client" element={<ClientDashboard />} />
+          <Route path="/client/users" element={<ClientUsers />} />
+          <Route path="/client/create-users" element={<CreateUser />} />
 
-        {/* User Route */}
-        <Route path="/users" element={<UserDashboard />} />
-        <Route path="/courses" element={<AddCourse />} />
-        <Route path="/batches" element={<AddBatch />} />
-        <Route path="/show-batch" element={<AllBatches />} />
-        <Route path="/show-courses" element={<AllCourses />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-      </Routes>
-    </BrowserRouter>
+          {/* User Route */}
+          <Route path="/users" element={<UserDashboard />} />
+          <Route path="/courses" element={<AddCourse />} />
+          <Route path="/batches" element={<AddBatch />} />
+          <Route path="/show-batch" element={<AllBatches />} />
+          <Route path="/show-courses" element={<AllCourses />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
   );
 };
 
