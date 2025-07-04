@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FiMenu, FiX } from 'react-icons/fi';
-import { FaUsers, FaUserShield, FaPlus, FaUser, FaBook, FaLayerGroup } from 'react-icons/fa';
+import {
+  FiMenu, FiX,
+  FiUsers, FiUserPlus, FiUser, FiLayers,
+  FiShield, FiBookOpen
+} from 'react-icons/fi';
 
 const Sidebar = () => {
   const data = JSON.parse(localStorage.getItem("data"));
@@ -10,113 +13,100 @@ const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(true);
   const toggleSidebar = () => setIsOpen(!isOpen);
 
-  const linkClasses =
-    "flex items-center gap-3 px-4 py-3 text-white hover:bg-white hover:text-amber-800 transition rounded-md";
+  const linkClasses = "flex items-center gap-3 px-4 py-3 hover:bg-white/20 text-white rounded-lg transition-all duration-200";
 
   return (
-    <div
-      className={`${
-        isOpen ? "w-64" : "w-20"
-      } bg-gradient-to-b from-amber-800 to-yellow-700 min-h-screen p-4 transition-all duration-300`}
-    >
-      <div className="flex justify-end mb-6">
+    <div className={` min-h-screen transition-all duration-300 ${isOpen ? "w-64" : "w-20"} bg-gradient-to-b from-gray-900 via-indigo-900 to-purple-900 p-4 shadow-lg`}>
+      {/* Sidebar Header with Toggle */}
+      <div className="flex justify-between items-center mb-6">
+        <div className="text-white font-bold text-lg flex items-center gap-2">
+          {isOpen && <span>Dashboard</span>}
+        </div>
         <button
           onClick={toggleSidebar}
           className="text-white text-2xl focus:outline-none"
         >
-          {isOpen ? <FiX /> : <FiMenu />}
+          {isOpen ? <FiX size={22} /> : <FiMenu size={22} className='mr-3' />}
         </button>
       </div>
 
-      <ul className="space-y-4">
-        {/* Super Admin Links */}
+      <ul className="space-y-3">
+        {/* Super Admin */}
         {role === "superadmin" && (
           <>
             <Link to="/super-admin" className={linkClasses}>
-              <FaUserShield />
-              {isOpen && <span>Admin Dashboard</span>}
+              <FiShield /> {isOpen && <span>Admin Dashboard</span>}
             </Link>
             <Link to="/super-admin/total-clients" className={linkClasses}>
-              <FaUsers />
-              {isOpen && <span>Total Clients</span>}
+              <FiUsers /> {isOpen && <span>Total Clients</span>}
             </Link>
             <Link to="/super-admin/total-users" className={linkClasses}>
-              <FaUsers />
-              {isOpen && <span>Total Users</span>}
+              <FiUsers /> {isOpen && <span>Total Users</span>}
             </Link>
             <Link to="/super-admin/create-client" className={linkClasses}>
-              <FaPlus />
-              {isOpen && <span>Create Client</span>}
+              <FiUserPlus /> {isOpen && <span>Create Client</span>}
             </Link>
           </>
         )}
 
-        {/* Client Links */}
+        {/* Client */}
         {role === "client" && (
           <>
             <Link to="/client" className={linkClasses}>
-              <FaUser />
-              {isOpen && <span>Client Dashboard</span>}
+              <FiUser /> {isOpen && <span>Client Dashboard</span>}
             </Link>
             <Link to="/client/users" className={linkClasses}>
-              <FaUsers />
-              {isOpen && <span>Total Users</span>}
+              <FiUsers /> {isOpen && <span>Total Users</span>}
             </Link>
             <Link to="/client/create-users" className={linkClasses}>
-              <FaPlus />
-              {isOpen && <span>Create User</span>}
+              <FiUserPlus /> {isOpen && <span>Create User</span>}
             </Link>
           </>
         )}
 
-        {/* Admin / Sub-admin / HR / Trainer Sidebar */}
+        {/* Admin / Sub-admin / HR */}
         {["admin", "sub-admin", "HR"].includes(role) && (
           <>
             <Link to="/users" className={linkClasses}>
-              <FaUser />
-              {isOpen && <span>Users</span>}
+              <FiUser /> {isOpen && <span>Users</span>}
             </Link>
             <Link to="/client/users" className={linkClasses}>
-              <FaUsers />
-              {isOpen && <span>Total Users</span>}
+              <FiUsers /> {isOpen && <span>Total Users</span>}
             </Link>
+            {(role === "admin" || role === "sub-admin") && (
+              <Link to="/client/create-users" className={linkClasses}>
+                <FiUserPlus /> {isOpen && <span>Create User</span>}
+              </Link>
+            )}
             <Link to="/courses" className={linkClasses}>
-              <FaPlus />
-              {isOpen && <span>Create Course</span>}
+              <FiUserPlus /> {isOpen && <span>Create Course</span>}
             </Link>
             <Link to="/batches" className={linkClasses}>
-              <FaPlus />
-              {isOpen && <span>Create Batch</span>}
+              <FiUserPlus /> {isOpen && <span>Create Batch</span>}
             </Link>
             <Link to="/show-courses" className={linkClasses}>
-              <FaBook />
-              {isOpen && <span>Show Courses</span>}
+              <FiBookOpen /> {isOpen && <span>Show Courses</span>}
             </Link>
             <Link to="/show-batch" className={linkClasses}>
-              <FaLayerGroup />
-              {isOpen && <span>Show Batches</span>}
+              <FiLayers /> {isOpen && <span>Show Batches</span>}
             </Link>
           </>
         )}
 
-          {role === "trainer" && (
+        {/* Trainer */}
+        {role === "trainer" && (
           <>
             <Link to="/users" className={linkClasses}>
-              <FaUser />
-              {isOpen && <span>Users</span>}
+              <FiUser /> {isOpen && <span>Users</span>}
             </Link>
             <Link to="/client/users" className={linkClasses}>
-              <FaUsers />
-              {isOpen && <span>Total Users</span>}
+              <FiUsers /> {isOpen && <span>Total Users</span>}
             </Link>
-           
             <Link to="/show-courses" className={linkClasses}>
-              <FaBook />
-              {isOpen && <span>Show Courses</span>}
+              <FiBookOpen /> {isOpen && <span>Show Courses</span>}
             </Link>
             <Link to="/show-batch" className={linkClasses}>
-              <FaLayerGroup />
-              {isOpen && <span>Show Batches</span>}
+              <FiLayers /> {isOpen && <span>Show Batches</span>}
             </Link>
           </>
         )}

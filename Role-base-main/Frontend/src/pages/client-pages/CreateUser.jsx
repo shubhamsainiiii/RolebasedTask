@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { assets } from "../../assets/assets";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Sidebar from "../../components/Sidebar";
 import Header from "../../components/Header";
+
 const backendurl = "http://localhost:2000";
 
 const CreateUser = () => {
@@ -15,10 +16,9 @@ const CreateUser = () => {
     name: "",
     email: "",
     password: "",
-    role: "", // ✅ Added role in state
+    role: "",
   });
 
-  // Handle Input Change
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -27,11 +27,8 @@ const CreateUser = () => {
     }));
   };
 
-  // Handle Form Submit
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    axios.defaults.withCredentials = true;
-
     const { name, email, password, role } = formData;
 
     if (!name || !email || !password || !role) {
@@ -42,7 +39,7 @@ const CreateUser = () => {
     try {
       const response = await axios.post(
         `${backendurl}/users/create`,
-        { name, email, password, role }, // ✅ Send role to backend
+        { name, email, password, role },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -51,8 +48,6 @@ const CreateUser = () => {
         }
       );
 
-      console.log("[✅ Signup Response]:", response.data);
-
       if (response.status === 200) {
         toast.success(response.data.message || "User Created Successfully");
         navigate("/client");
@@ -60,15 +55,6 @@ const CreateUser = () => {
         toast.error(response.data.message || "User Creation Failed");
       }
     } catch (error) {
-      console.error("❌ Error occurred in Signup API call");
-      console.log("[Error Object]:", error);
-
-      if (error.response) {
-        console.log("[Response Data]:", error.response.data);
-      } else {
-        console.log("[Axios Config Error]:", error.message);
-      }
-
       toast.error(
         error?.response?.data?.message || "Error occurred, try again later"
       );
@@ -76,89 +62,84 @@ const CreateUser = () => {
   };
 
   return (
-    <div className="flex ">
-      <div>
-        <Sidebar />
-      </div>
-
+    <div className="flex">
+      <Sidebar />
       <div className="flex-1">
         <Header />
-        <div className="flex  items-center justify-center min-h-screen px-6 sm:px-0 bg-gradient-to-br from-blue-200 to-green-300">
-          <div className="bg-slate-900 p-10 rounded-lg shadow-lg w-full sm:w-96 text-indigo-300 text-sm">
-            <h2 className="text-3xl font-semibold text-white text-center mb-6">
-              Create User
+        <div className="min-h-screen flex items-center justify-center bg-white  px-4 sm:px-0">
+          <div className="w-full max-w-md bg-gradient-to-br from-[#1c1b3a] via-[#2c2b6c] to-[#1e1c3c] backdrop-blur-lg border border-white/10 p-8 rounded-2xl shadow-xl">
+            <h2 className="text-3xl font-bold text-white text-center mb-6">
+              Create New User
             </h2>
 
-            <form onSubmit={onSubmitHandler}>
+            <form onSubmit={onSubmitHandler} className="space-y-4">
               {/* Name */}
-              <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
-                <img src={assets.person_icon} alt="user icon" />
+              <div className="flex items-center gap-3 w-full px-5 py-3 rounded-full bg-white/10 border border-white/20">
+                <img src={assets.person_icon} alt="name" />
                 <input
-                  name="name"
-                  onChange={handleChange}
-                  value={formData.name}
-                  className="bg-transparent outline-none w-full"
                   type="text"
-                  placeholder="Name"
-                  autoComplete="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Full Name"
+                  className="bg-transparent outline-none w-full text-white placeholder:text-gray-300"
                   required
                 />
               </div>
 
               {/* Email */}
-              <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
-                <img src={assets.mail_icon} alt="mail icon" />
+              <div className="flex items-center gap-3 w-full px-5 py-3 rounded-full bg-white/10 border border-white/20">
+                <img src={assets.mail_icon} alt="email" />
                 <input
-                  name="email"
-                  onChange={handleChange}
-                  value={formData.email}
-                  className="bg-transparent outline-none w-full"
                   type="email"
-                  placeholder="Email Id"
-                  autoComplete="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Email Address"
+                  className="bg-transparent outline-none w-full text-white placeholder:text-gray-300"
                   required
                 />
               </div>
 
               {/* Password */}
-              <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
-                <img src={assets.lock_icon} alt="lock icon" />
+              <div className="flex items-center gap-3 w-full px-5 py-3 rounded-full bg-white/10 border border-white/20">
+                <img src={assets.lock_icon} alt="password" />
                 <input
-                  name="password"
-                  onChange={handleChange}
-                  value={formData.password}
-                  className="bg-transparent outline-none w-full"
                   type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   placeholder="Password"
-                  autoComplete="new-password"
+                  className="bg-transparent outline-none w-full text-white placeholder:text-gray-300"
                   required
                 />
               </div>
 
-              {/* Role Dropdown */}
-              <div className="mb-6 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
-                <img src={assets.person_icon} alt="role icon" />
+              {/* Role */}
+              <div className="flex items-center gap-3 w-full px-5 py-3 rounded-full bg-white/10 border border-white/20">
+                <img src={assets.person_icon} alt="role" />
                 <select
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
-                  className="bg-transparent outline-none w-full text-indigo-300"
+                  className="bg-transparent outline-none w-full text-white placeholder:text-gray-300"
                   required
                 >
-                  <option value="" disabled>
+                  <option value="" disabled hidden>
                     Select Role
                   </option>
-                  <option value="admin">Admin</option>
-                  <option value="sub-admin">Sub-Admin</option>
-                  <option value="HR">HR</option>
-                  <option value="trainer">Trainer</option>
-                  <option value="student">Student</option>
+                  <option value="admin" className="text-black">Admin</option>
+                  <option value="sub-admin" className="text-black">Sub-Admin</option>
+                  <option value="HR" className="text-black">HR</option>
+                  <option value="trainer" className="text-black">Trainer</option>
+                  <option value="student" className="text-black">Student</option>
                 </select>
               </div>
 
+              {/* Button */}
               <button
                 type="submit"
-                className="w-full py-2.5 rounded-full bg-gradient-to-r from-indigo-500 to-indigo-900 text-white font-medium"
+                className="w-full py-3 rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-semibold hover:opacity-90 transition"
               >
                 Create User
               </button>

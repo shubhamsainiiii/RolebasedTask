@@ -3,14 +3,13 @@ import Sidebar from "../../components/Sidebar";
 import axios from "axios";
 import Header from "../../components/Header";
 import { Link } from "react-router-dom";
-import { FaBuilding, FaEnvelope, FaUserTie } from "react-icons/fa";
+import { FaEnvelope, FaUsers, FaUserTie } from "react-icons/fa";
 
 const backendurl = "http://localhost:2000";
 
 const TotalClients = () => {
   const token = localStorage.getItem("token");
   const [data, setData] = useState([]);
-  const [userData, setUserData] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,9 +20,7 @@ const TotalClients = () => {
             "Content-Type": "application/json",
           },
         });
-        const result = response.data;
-        setData(result.result);
-        setUserData(result.data);
+        setData(response.data.result);
       } catch (error) {
         console.error("Error fetching data:", error);
         if (error.response) {
@@ -35,42 +32,46 @@ const TotalClients = () => {
     };
 
     fetchData();
-  }, []);
+  });
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2]">
       <Sidebar />
       <div className="flex-1">
         <Header />
-        <div className="p-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">👥 Total Clients</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="p-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-6">Total Clients</h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {data &&
               data.map((item, index) => (
                 <Link
                   to={`/super-admin/specific-client/${item._id}`}
                   key={index}
                 >
-                  <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 cursor-pointer group">
+                  <div className="bg-white rounded-2xl shadow-sm transform transition-all duration-300 p-6 cursor-pointer group border-t-4 border-transparent hover:border-indigo-900 hover:translate-y-1">
+                    {/* Circular Icon Avatar */}
                     <div className="flex justify-center mb-4">
-                      <img
-                        className="w-24 h-24 rounded-full shadow-md border-2 border-indigo-400"
-                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy8unA88y453WxwRtI5brdcCA6_tMFnMx6uQ&s"
-                        alt="client"
-                      />
+                      <div className="bg-indigo-500 text-white rounded-full p-4 shadow-lg">
+                        <FaUsers className="text-3xl" />
+                      </div>
                     </div>
-                    <div className="space-y-2 text-center">
-                      <p className="text-lg font-semibold text-gray-700">
-                        <FaBuilding className="inline mr-2 text-indigo-500" />
+
+                    {/* Info */}
+                    <div className="text-center space-y-1">
+                      <p className="text-lg font-semibold text-gray-800">
                         {item.name}
                       </p>
-                      <p className="text-gray-600">
-                        <FaEnvelope className="inline mr-2 text-green-500" />
+                      <p className="text-sm text-gray-600">
+                        <FaEnvelope className="inline mr-2 text-gray-500" />
                         {item.email}
                       </p>
-                      <p className="text-gray-600">
-                        <FaUserTie className="inline mr-2 text-purple-500" />
-                        Created by: <span className="font-medium">{item.superadmin_id.name}</span>
+                      <p className="text-sm text-gray-600">
+                        <FaUserTie className="inline mr-2 text-gray-500" />
+                        Created by:{" "}
+                        <span className="font-medium">
+                          {item.superadmin_id?.name}
+                        </span>
                       </p>
                     </div>
                   </div>
@@ -84,3 +85,4 @@ const TotalClients = () => {
 };
 
 export default TotalClients;
+

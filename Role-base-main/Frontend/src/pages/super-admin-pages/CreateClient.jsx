@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { toast } from 'react-toastify';
+import { FaEnvelope, FaLock, FaUser } from 'react-icons/fa';
+import 'react-toastify/dist/ReactToastify.css';
 
 const backendurl = "http://localhost:2000";
 
@@ -15,8 +18,8 @@ const ClientSignup = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
+    setFormData((prev) => ({
+      ...prev,
       [name]: value,
     }));
   };
@@ -26,8 +29,8 @@ const ClientSignup = () => {
 
     const token = localStorage.getItem("token");
     if (!token) {
-      alert("Authorization token not found. Please log in again.");
-      navigate("/login"); // Optional: redirect to login page
+      toast.error("Authorization token not found. Please log in again.");
+      navigate("/login");
       return;
     }
 
@@ -42,69 +45,77 @@ const ClientSignup = () => {
           },
         }
       );
-      console.log(response.status,"dfghjkl")
+
       if (response.status === 201) {
-        alert("Client created successfully!");
+        toast.success("Client created successfully!");
         navigate("/super-admin/total-clients");
       }
     } catch (error) {
-      console.error("Error creating client:", error);
-
-      // Handle token expiration error
       if (error.response?.data?.message === "jwt expired") {
-        alert("Session expired. Please log in again.");
+        toast.error("Session expired. Please log in again.");
         localStorage.removeItem("token");
         navigate("/login");
         return;
       }
 
-      alert(error.response?.data?.message || "Client creation failed.");
+      toast.error(error.response?.data?.message || "Client creation failed.");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#1a1443] via-[#1e1b50] to-[#0f0e2b] px-4">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md"
+        className="bg-white/10 backdrop-blur-lg border border-white/10 p-8 rounded-2xl shadow-xl w-full max-w-md text-white"
       >
-        <h2 className="text-2xl font-bold mb-6 text-center text-amber-800">
-          Client Signup
-        </h2>
+        <h2 className="text-3xl font-bold text-center mb-6">Client Signup</h2>
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleChange}
-          className="w-full p-2 mb-4 border border-gray-300 rounded"
-          required
-        />
+        {/* Name */}
+        <div className="flex items-center gap-3 w-full px-5 py-3 mb-4 rounded-full bg-white/10 border border-white/20">
+          <FaUser className="text-blue-300" />
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Full Name"
+            className="bg-transparent outline-none w-full text-white placeholder:text-gray-300"
+            required
+          />
+        </div>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-          className="w-full p-2 mb-4 border border-gray-300 rounded"
-          required
-        />
+        {/* Email */}
+        <div className="flex items-center gap-3 w-full px-5 py-3 mb-4 rounded-full bg-white/10 border border-white/20">
+          <FaEnvelope className="text-blue-300" />
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="Email Address"
+            className="bg-transparent outline-none w-full text-white placeholder:text-gray-300"
+            required
+          />
+        </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          className="w-full p-2 mb-6 border border-gray-300 rounded"
-          required
-        />
+        {/* Password */}
+        <div className="flex items-center gap-3 w-full px-5 py-3 mb-6 rounded-full bg-white/10 border border-white/20">
+          <FaLock className="text-blue-300" />
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="Password"
+            className="bg-transparent outline-none w-full text-white placeholder:text-gray-300"
+            required
+          />
+        </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-amber-800 text-white p-2 rounded hover:bg-amber-700 transition duration-200"
+          className="w-full py-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold hover:opacity-90 transition-all duration-300 cursor-pointer"
         >
           Sign Up
         </button>

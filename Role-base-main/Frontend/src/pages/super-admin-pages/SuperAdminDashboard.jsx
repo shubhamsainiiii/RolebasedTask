@@ -27,26 +27,26 @@ const SuperAdminDashboard = () => {
     };
 
     fetchData();
-  }, []);
+  });
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gradient-to-br from-[#f5f7fa] to-[#c3cfe2]">
       <Sidebar />
       <div className="flex-1">
         <Header />
 
         <div className="p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <Link to="/super-admin/total-clients">
-            <div className="bg-white rounded-3xl shadow-md hover:shadow-xl transition-all duration-300 p-6 cursor-pointer group">
+            <div className="bg-white rounded-2xl shadow-sm transform transition-all duration-300 p-6 cursor-pointer group border-t-4 border-transparent hover:border-indigo-900 hover:translate-y-1">
               <div className="flex justify-center items-center mb-4">
-                <div className="bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full p-5 shadow-lg">
-                  <FaUsers className="text-white text-4xl" />
+                <div className="bg-indigo-500 text-white rounded-full p-4 shadow-lg">
+                  <FaUsers className="text-3xl" />
                 </div>
               </div>
-              <p className="text-center text-gray-700 text-lg font-medium">
-                👤 Total Clients
-              </p>
-              <p className="text-center text-3xl font-bold text-amber-700 mt-2">
+              <h3 className="text-center text-gray-800 text-xl font-semibold">
+                Total Clients
+              </h3>
+              <p className="text-center text-4xl font-bold text-gray-800 mt-2">
                 {data.length}
               </p>
             </div>
@@ -58,3 +58,4 @@ const SuperAdminDashboard = () => {
 };
 
 export default SuperAdminDashboard;
+

@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { useNavigate } from 'react-router-dom';
+import { FaUserCircle } from 'react-icons/fa';
 
 const backendurl = "http://localhost:2000";
 
 const ClientUsers = () => {
   const token = localStorage.getItem("token");
-  const {user} = JSON.parse(localStorage.getItem("data"))
+  const { user } = JSON.parse(localStorage.getItem("data"));
   const [data, setData] = useState([]);
   const navigate = useNavigate();
 
@@ -35,7 +36,6 @@ const ClientUsers = () => {
       const response = await axios.post(
         `${backendurl}/users/otp/${userId}`,
         { userId, email },
-        
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -46,12 +46,12 @@ const ClientUsers = () => {
 
       if (response.status === 200) {
         alert("OTP sent to email.");
-        navigate(`/reset-password`,{
-      state: {
-        email,
-        returnTo: "/users", // 👈 or "/client" or any current dashboard route
-      },
-    });
+        navigate(`/reset-password`, {
+          state: {
+            email,
+            returnTo: "/users",
+          },
+        });
       } else {
         alert("Failed to send OTP.");
       }
@@ -62,53 +62,60 @@ const ClientUsers = () => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex min-h-screen bg-gradient-to-br from-slate-100 to-slate-200">
       <Sidebar />
-      <div className="flex-1 h-[calc(100vh-10px)] overflow-y-auto pr-4">
+      <div className="flex-1 overflow-y-auto pr-4">
         <Header />
-        <div className="grid grid-cols-3 gap-10 p-6">
-          {data.map((item, index) => (
-           item.role!=="client" ?  <div
-              key={index}
-              className="w-80 h-auto border border-gray-200 rounded-2xl shadow-md bg-white p-5 hover:shadow-xl hover:scale-105 transition-all duration-300"
-            >
-              <div className="flex justify-center">
-                <img
-                  src={
-                    item.image
-                      ? item.image
-                      : `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=random`
-                  }
-                  alt={item.name}
-                  className="w-28 h-28 rounded-full object-cover border-4 border-blue-200 shadow-md"
-                />
-              </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 p-6">
+          {data.map((item, index) =>
+            item.role !== "client" ? (
+              <div
+                key={index}
+                className="bg-white/60 backdrop-blur-md border border-gray-200 shadow-xl rounded-2xl p-6 hover:shadow-2xl transition duration-300"
+              >
+                <div className="flex justify-center mb-4">
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-24 h-24 rounded-full object-cover border-4 border-indigo-400 shadow-md"
+                    />
+                  ) : (
+                    <FaUserCircle className="text-indigo-500 text-6xl" />
+                  )}
+                </div>
 
-              <div className="mt-5 space-y-2 text-center">
-                <p className="text-xl font-bold text-gray-800">👤 {item.name}</p>
-                <p className="text-sm text-gray-600">⭐ Role: <span className="font-semibold">{item.role}</span></p>
-                <p className="text-sm text-gray-600">📧 Email: <span className="font-semibold">{item.email}</span></p>
+                <div className="text-center space-y-2">
+                  <h3 className="text-xl font-semibold text-gray-800">{item.name}</h3>
+                  <p className="text-sm text-gray-600">
+                    <span className="font-medium">Role:</span> {item.role}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <span className="font-medium">Email:</span> {item.email}
+                  </p>
 
-                {item.superAdmin_id ? (
-                  <p className="text-sm text-gray-600">🏢 Created By: <span className="font-semibold">{item.superAdmin_id.name}</span></p>
-                ) : item.client ? (
-                  <p className="text-sm text-gray-600">🏢 Created By: <span className="font-semibold">{item.client.name}</span></p>
-                ) : null}
+                  {item.superAdmin_id ? (
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium">Created By:</span> {item.superAdmin_id.name}
+                    </p>
+                  ) : item.client ? (
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium">Created By:</span> {item.client.name}
+                    </p>
+                  ) : null}
 
-                { user.role==="admin" ?<div className="pt-3">
+                  {user.role === "admin" && (
                     <button
                       onClick={() => handleResetPassword(item._id, item.email)}
-                      className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+                      className="mt-4 w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 rounded-md font-medium transition duration-200"
                     >
                       Change Password
                     </button>
-                  </div>
-                :""  
-                }
+                  )}
+                </div>
               </div>
-            </div>
-            :""
-          ))}
+            ) : null
+          )}
         </div>
       </div>
     </div>

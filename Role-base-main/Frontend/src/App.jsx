@@ -1,7 +1,9 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
+import "react-toastify/dist/ReactToastify.css";
 import SuperAdminDashboard from "./pages/super-admin-pages/SuperAdminDashboard";
 import TotalClients from "./pages/super-admin-pages/TotalClients";
 import TotalUsers from "./pages/super-admin-pages/TotalUsers";
@@ -20,6 +22,7 @@ import ResetPassword from "./components/ResetPassword";
 const App = () => {
   return (
     <BrowserRouter>
+      <ToastContainer position="top-center" autoClose={3000} />
       <Routes>
         {/* Auth Routes */}
         <Route path="/" element={<Login />} />
@@ -40,11 +43,10 @@ const App = () => {
         {/* User Route */}
         <Route path="/users" element={<UserDashboard />} />
         <Route path="/courses" element={<AddCourse />} />
-         <Route path="/batches" element={<AddBatch />} />
-         <Route path="/show-batch" element={<AllBatches />} />
-         <Route path="/show-courses" element={<AllCourses />} />
-         <Route path="/reset-password" element={<ResetPassword />} />
-
+        <Route path="/batches" element={<AddBatch />} />
+        <Route path="/show-batch" element={<AllBatches />} />
+        <Route path="/show-courses" element={<AllCourses />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Routes>
     </BrowserRouter>
   );

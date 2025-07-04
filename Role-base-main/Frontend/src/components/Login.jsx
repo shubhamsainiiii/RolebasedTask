@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { assets } from "../assets/assets";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import { FaEnvelope, FaLock } from "react-icons/fa";
 
 const backendurl = "http://localhost:2000";
 
@@ -21,66 +20,42 @@ const Login = () => {
       [e.target.name]: e.target.value,
     }));
   };
+
   const onSubmitHandler = async (e) => {
     e.preventDefault();
-    axios.defaults.withCredentials = true;
+
+    const { email, password } = formData;
+
+    if (!email || !password) {
+      toast.error("All fields are required");
+      return;
+    }
 
     try {
-      let response;
-      let data;
-
-      // ✅ Frontend Field Validation
-
-      if (!formData.email || !formData.password) {
-        toast.error("All fields (Email, Password) are required");
-        return;
-      }
-
-      response = await axios.post(`${backendurl}/users/login`, {
-        email: formData.email,
-        password: formData.password,
-        
+      const response = await axios.post(`${backendurl}/users/login`, {
+        email,
+        password,
       });
 
-      data = response.data;
-      console.log("[✅ Response Data]:", data);
-      console.log("[✅ Token Data]:", data.token);
-      console.log("[✅ Token Data]:", data.user.role);
+      const data = response.data;
 
       if (response.status === 200) {
-        localStorage.setItem("token",data.token)
-        localStorage.setItem("data",JSON.stringify(data))
-        alert("success")
-        toast.success(data.message || "Success");
-        if(data.user.role==="superadmin"){
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("data", JSON.stringify(data));
+        toast.success(data.message || "Login Successful");
 
+        const role = data.user.role;
+        if (role === "superadmin") {
           navigate("/super-admin");
-        }
-        else if(data.user.role==="client"){
+        } else if (role === "client") {
           navigate("/client");
-        }
-        else{
+        } else {
           navigate("/users");
         }
       } else {
         toast.error(data.message || "Something went wrong");
       }
     } catch (error) {
-      // ✅ Detailed Axios/Backend Error Logging
-      console.error("❌ Error occurred in API call");
-      console.log("[Error Object]:", error);
-
-      if (error.response) {
-        console.log("[Backend Error Response]:", error.response);
-        console.log("[Status Code]:", error.response.status);
-        console.log("[Response Data]:", error.response.data);
-      } else if (error.request) {
-        console.log("[No Response Received]:", error.request);
-      } else {
-        console.log("[Axios Config Error]:", error.message);
-      }
-
-      // ✅ Friendly error toast for UI
       const message =
         error?.response?.data?.message ||
         "Server error, please try again later";
@@ -89,60 +64,64 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen px-6 sm:px-0 bg-gradient-to-br from-blue-200 to-green-300">
-      <div className="bg-slate-900 p-10 rounded-lg shadow-lg w-full sm:w-96 text-indigo-300 text-sm">
-        <h2 className="text-2xl font-semibold text-white text-center mb-8">
-          Login Into Your Account
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0f0c29] via-[#302b63] to-[#24243e] px-4 relative overflow-hidden">
+      {/* Background Lights */}
+      <div className="absolute w-96 h-96 bg-pink-400 opacity-20 rounded-full blur-[150px] top-[-50px] left-[-50px]" />
+      <div className="absolute w-96 h-96 bg-cyan-400 opacity-20 rounded-full blur-[150px] bottom-[-50px] right-[-50px]" />
+
+      {/* Card */}
+      <div className="w-full max-w-md bg-white/10 backdrop-blur-lg border border-white/20 shadow-2xl rounded-2xl p-8 z-10 text-white">
+        <h2 className="text-3xl font-bold text-center mb-6 tracking-wide">
+          Welcome Back
         </h2>
 
-        <form onSubmit={onSubmitHandler}>
-          <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
-            <img src={assets.mail_icon} alt="" />
+        <form onSubmit={onSubmitHandler} className="space-y-5">
+          {/* Email */}
+          <div className="flex items-center px-4 py-3 rounded-full bg-white/10 border border-white/20">
+            <FaEnvelope className="text-blue-300 mr-3" />
             <input
-              name="email"
-              onChange={handleChange}
-              value={formData.email}
-              className="bg-transparent outline-none w-full"
               type="email"
-              placeholder="Email Id"
-              autoComplete="email"
-              required
-            />
-          </div>
-
-          <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full bg-[#333A5C]">
-            <img src={assets.lock_icon} alt="" />
-            <input
-              name="password"
+              name="email"
+              placeholder="Email Address"
+              value={formData.email}
               onChange={handleChange}
-              value={formData.password}
-              className="bg-transparent outline-none w-full"
-              type="password"
-              placeholder="Password"
-              autoComplete="password"
+              className="bg-transparent w-full text-white outline-none placeholder:text-gray-300"
               required
             />
           </div>
 
+          {/* Password */}
+          <div className="flex items-center px-4 py-3 rounded-full bg-white/10 border border-white/20">
+            <FaLock className="text-blue-300 mr-3" />
+            <input
+              type="password"
+              name="password"
+              placeholder="Password"
+              value={formData.password}
+              onChange={handleChange}
+              className="bg-transparent w-full text-white outline-none placeholder:text-gray-300"
+              required
+            />
+          </div>
+
+          {/* Submit */}
           <button
             type="submit"
-            className="w-full py-2.5 rounded-full bg-gradient-to-r cursor-pointer from-indigo-500 to-indigo-900  hover:from-indigo-300 hover:to-indigo-100 hover:text-blue-950 text-white font-medium"
+            className="w-full py-3 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 font-medium hover:from-indigo-400 hover:to-purple-500 transition"
           >
             Login
           </button>
         </form>
 
-        <div className="text-center mt-4 text-gray-400 text-xs">
-          <div className="text-lg mt-5">
-            Don't have an account?{" "}
-            <Link
-              to={"/signup"}
-              className="text-blue-400 font-bold text-lg cursor-pointer underline"
-            >
-              Signup
-            </Link>
-          </div>
-        </div>
+        <p className="text-center text-gray-300 text-sm mt-6">
+          Don’t have an account?{" "}
+          <Link
+            to="/signup"
+            className="text-indigo-300 hover:underline font-semibold"
+          >
+            Signup
+          </Link>
+        </p>
       </div>
     </div>
   );
